@@ -9,49 +9,56 @@ import { Order } from '../interfaces/order';
 })
 export class CustomerServiceSoap {
 
-  private serviceUrl = 'http://localhost:56974/CustomerService.svc'; // URL de tu servicio WCF
+  private serviceUrl = 'http://localhost:56974/CustomerService.svc'; 
 
   constructor(private http: HttpClient) {}
 
-  getOrdersByCustomerId(customerId: string): Observable<Order[]> {
-    const body = this.createSoapRequest(); // Usar el método modificado
-    return this.sendSoapRequest(body);
+   getOrdersByCustomerId(customerId: string): Observable<Order[]> {
+    const body = this.createSoapRequest('GetCustomerOrders', { customerId });
+    return this.sendSoapRequest(body,'GetCustomerOrders');
   }
 
-  getCustomersByCountry(country: string): Observable<Customer[]> {
-    const body = this.createSoapRequest(); // Usar el método modificado
-    console.log(body); // Para asegurarte de que el cuerpo es correcto
 
-    return this.sendSoapRequest(body);
+  getCustomersByCountry(country: string): Observable<Customer[]> {
+    const body = this.createSoapRequest('GetCustomersByCountry', { country });
+    return this.sendSoapRequest(body,'GetCustomersByCountry');
   }
 
   getCustomerOrders(customerId: string): Observable<Order[]> {
-    const body = this.createSoapRequest(); // Usar el método modificado
-    return this.sendSoapRequest(body);
+    const body = this.createSoapRequest('GetCustomerOrders', { customerId });
+    return this.sendSoapRequest(body,'GetCustomerOrders');
   }
 
   trackAction(urlRequest: string, sourceIp: string): Observable<any> {
-    const body = this.createSoapRequest(); // Usar el método modificado
-    return this.sendSoapRequest(body);
+    const body = this.createSoapRequest('TrackAction', { urlRequest, sourceIp });
+    return this.sendSoapRequest(body,'TrackAction');
   }
 
-  // Modificado para enviar un body fijo
-  private createSoapRequest(): string {
-        return `soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:app="http://tempuri.org/">
-         <soapenv:Header/>
-         <soapenv:Body>
-            <app:GetCustomersByCountry>
-               <app:country>USA</app:country>
-            </app:GetCustomersByCountry>
-         </soapenv:Body>
-      </soapenv:Envelope>`;
+  private createSoapRequest(action: string, params: any): string {
+    let body = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                  <soapenv:Header/>
+                  <soapenv:Body>
+                    <tem:${action}>`;
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        body += `<tem:${key}>${params[key]}</tem:${key}>`;
+      }
+    }
+
+    body += `</tem:${action}>
+            </soapenv:Body>
+          </soapenv:Envelope>`;
+    return body;
   }
 
-  private sendSoapRequest(body: string): Observable<any> {
+  private sendSoapRequest(body: string, action: string): Observable<any> {
     const headers = new HttpHeaders({
-        'Content-Type': 'text/xml; charset=utf-8',
-        'SOAPAction': 'http://tempuri.org/ICustomerService/GetCustomersByCountry',
-      });
+      'Content-Type': 'text/xml',
+      SOAPAction: `http://tempuri.org/ICustomerService/${action}`
+    });
+
+    console.log(headers)
 
     return this.http.post<any>(this.serviceUrl, body, { headers });
   }
