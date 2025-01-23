@@ -1,0 +1,7 @@
+{
+    "/CustomerService.svc": {
+      "target": "http://localhost:56974",
+      "secure": false
+    }
+  }
+  

@@ -1,0 +1,10 @@
+<div class="container">
+    <h2>Customer Orders</h2>
+    <kendo-grid [data]="orders">
+      <kendo-grid-column field="OrderId" title="Order ID" [width]="150"></kendo-grid-column>
+      <kendo-grid-column field="CustomerId" title="Customer ID" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="OrderDate" title="Order Date" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="ShippedDate" title="Shipped Date" [width]="200"></kendo-grid-column>
+    </kendo-grid>
+  </div>
+  

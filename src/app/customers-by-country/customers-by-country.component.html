@@ -1,0 +1,22 @@
+<div class="container">
+    <h2>Search Customers By Country</h2>
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" class="form-control" id="country" [(ngModel)]="country" placeholder="Enter country">
+    </div>
+    <button class="btn btn-primary" (click)="searchCustomers()">Search</button>
+  
+    <kendo-grid [data]="customers">
+      <kendo-grid-column field="CustomerId" title="Customer ID" [width]="150">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <a [routerLink]="['/customer-orders', dataItem.CustomerId]">{{dataItem.CustomerId}}</a>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="CompanyName" title="Company Name" [width]="250"></kendo-grid-column>
+      <kendo-grid-column field="ContactName" title="Contact Name" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="Phone" title="Phone Number" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="Fax" title="Fax Number" [width]="200"></kendo-grid-column>
+    </kendo-grid>
+    
+  </div>
+  
